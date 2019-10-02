@@ -1,4 +1,5 @@
 const SQL = require('sequelize');
+const isEmail = require('isemail');
 
 module.exports.paginateResults = ({
   after: cursor,
@@ -67,3 +68,16 @@ module.exports.createStore = () => {
 
   return { users, trips };
 };
+
+module.exports.getUserContext = async (req, store) => {
+  // simple auth check on every request
+  const auth = (req.headers && req.headers.authorization) || "";
+  const email = Buffer.from(auth, "base64").toString("ascii");
+  // if the email isn't formatted validly, return null for user
+  if (!isEmail.validate(email)) return { user: null };
+  // find a user by their email
+  const users = await store.users.findOrCreate({ where: { email } });
+  const user = users && users[0] ? users[0] : null;
+
+  return { user: { ...user.dataValues } };
+}
