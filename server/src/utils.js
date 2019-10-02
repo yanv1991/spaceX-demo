@@ -1,7 +1,7 @@
 const SQL = require('sequelize');
 const isEmail = require('isemail');
 
-module.exports.paginateResults = ({
+export const paginateResults = ({
   after: cursor,
   pageSize = 20,
   results,
@@ -29,7 +29,7 @@ module.exports.paginateResults = ({
     : results.slice(0, pageSize);
 };
 
-module.exports.createStore = () => {
+export const createStore = () => {
   const Op = SQL.Op;
   const operatorsAliases = {
     $in: Op.in,
@@ -69,7 +69,7 @@ module.exports.createStore = () => {
   return { users, trips };
 };
 
-module.exports.getUserContext = async (req, store) => {
+export const getUserContext = async (req, store) => {
   // simple auth check on every request
   const auth = (req.headers && req.headers.authorization) || "";
   const email = Buffer.from(auth, "base64").toString("ascii");

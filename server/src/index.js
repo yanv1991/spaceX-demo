@@ -1,10 +1,9 @@
 const { ApolloServer } = require("apollo-server");
 
-const typeDefs = require("./schema");
-const resolvers = require("./resolvers");
-const { createStore, getUserContext } = require("./utils");
+import { createStore, getUserContext } from './utils'
 const LaunchAPI = require("./datasources/launch");
 const UserAPI = require("./datasources/user");
+const schema = require("./schema")
 
 const store = createStore();
 
@@ -12,8 +11,7 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     return getUserContext(req, store);
   },
-  typeDefs,
-  resolvers,
+  schema,
   dataSources: () => ({
     launchAPI: new LaunchAPI(),
     userAPI: new UserAPI({ store })
