@@ -4,11 +4,11 @@ import { HttpLink } from "apollo-link-http";
 import { ApolloProvider, useQuery } from "@apollo/react-hooks";
 import React from "react";
 import ReactDOM from "react-dom";
-import gql from "graphql-tag";
-import { resolvers, typeDefs } from "./resolvers";
+import { resolvers, typeDefs } from "./local-schema";
 import Pages from "./pages";
 import Login from "./pages/login";
 import injectStyles from "./styles";
+import isLoggedInQuery from "./queries/user";
 
 const cache = new InMemoryCache();
 const link = new HttpLink({
@@ -17,12 +17,6 @@ const link = new HttpLink({
   },
   uri: "http://localhost:4000/"
 });
-
-const IS_LOGGED_IN = gql`
-  query IsUserLoggedIn {
-    isLoggedIn @client
-  }
-`;
 
 const client = new ApolloClient({
   cache,
@@ -39,7 +33,7 @@ cache.writeData({
 });
 
 function IsLoggedIn() {
-  const { data } = useQuery(IS_LOGGED_IN);
+  const { data } = useQuery(isLoggedInQuery);
   return data.isLoggedIn ? <Pages /> : <Login />;
 }
 

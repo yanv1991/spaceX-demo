@@ -1,4 +1,6 @@
-const typeDef = /* GraphQL */`
+import { gql } from "apollo-server";
+
+const typeDef = gql`
   extend type Query {
     launches( # replace the current launches query with this one.
       """

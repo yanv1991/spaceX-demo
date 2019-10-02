@@ -1,37 +1,18 @@
 import React from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
 
-import { GET_LAUNCH_DETAILS } from '../pages/launch';
+import { getLaunchDetailsQuery } from '../queries/launch';
 import Button from '../components/button';
-
-const TOGGLE_CART = gql`
-  mutation addOrRemoveFromCart($launchId: ID!) {
-    addOrRemoveFromCart(id: $launchId) @client
-  }
-`;
-
-const CANCEL_TRIP = gql`
-  mutation cancel($launchId: ID!) {
-    cancelTrip(launchId: $launchId) {
-      success
-      message
-      launches {
-        id
-        isBooked
-      }
-    }
-  }
-`;
+import { cancelTripMutation, toggleCartMutation } from '../mutations/user';
 
 export default function ActionButton({ isBooked, id, isInCart }) {
   const [mutate, { loading, error }] = useMutation(
-    isBooked ? CANCEL_TRIP : TOGGLE_CART,
+    isBooked ? cancelTripMutation : toggleCartMutation,
     {
       variables: { launchId: id },
       refetchQueries: [
         {
-          query: GET_LAUNCH_DETAILS,
+          query: getLaunchDetailsQuery,
           variables: { launchId: id },
         },
       ]
@@ -39,7 +20,7 @@ export default function ActionButton({ isBooked, id, isInCart }) {
   );
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>An error occurred</p>;
+  if (error) return <p>An error ocÍcurred</p>;
 
   return (
     <div>

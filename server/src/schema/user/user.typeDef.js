@@ -1,4 +1,6 @@
-const typeDef = /* GraphQL */`
+import { gql } from "apollo-server";
+
+const typeDef = gql`
   extend type Query {
     # Queries for the current user
     me: User

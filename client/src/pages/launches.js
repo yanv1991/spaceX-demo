@@ -1,40 +1,11 @@
 import React, { Fragment } from "react";
 import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 import { LaunchTile, Header, Button, Loading } from "../components";
-
-export const LAUNCH_TILE_DATA = gql`
-  fragment LaunchTile on Launch {
-    id
-    isBooked
-    rocket {
-      id
-      name
-    }
-    mission {
-      name
-      missionPatch
-    }
-  }
-`;
-
-const GET_LAUNCHES = gql`
-  query launchList($after: String) {
-    launches(after: $after) {
-      cursor
-      hasMore
-
-      launches {
-        ...LaunchTile
-      }
-    }
-  }
-  ${LAUNCH_TILE_DATA}
-`;
+import { getLaunchesQuery } from '../queries/launch';
 
 export default function Launches() {
-  const { data, loading, error, fetchMore } = useQuery(GET_LAUNCHES);
+  const { data, loading, error, fetchMore } = useQuery(getLaunchesQuery);
   if (loading) return <Loading />;
   if (error) return <p>ERROR</p>;
 

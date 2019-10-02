@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { GET_CART_ITEMS } from "./pages/cart";
+import { getCartItems } from "./queries/user";
 
 export const typeDefs = gql`
   extend type Query {
@@ -26,19 +26,22 @@ export const schema = gql`
 export const resolvers = {
   Launch: {
     isInCart: (launch, _, { cache }) => {
-      const { cartItems } = cache.readQuery({ query: GET_CART_ITEMS });
+      const { cartItems } = cache.readQuery({ query: getCartItems });
+
       return cartItems.includes(launch.id);
     }
   },
   Mutation: {
     addOrRemoveFromCart: (_, { id }, { cache }) => {
-      const { cartItems } = cache.readQuery({ query: GET_CART_ITEMS });
+      const { cartItems } = cache.readQuery({ query: getCartItems });
       const data = {
         cartItems: cartItems.includes(id)
           ? cartItems.filter(i => i !== id)
           : [...cartItems, id],
       };
-      cache.writeQuery({ query: GET_CART_ITEMS, data });
+
+      cache.writeQuery({ query: getCartItems, data });
+
       return data.cartItems;
     },
   },
